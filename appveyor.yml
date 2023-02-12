@@ -1,0 +1,85 @@
+# AppVeyor configuration for AppVeyor project "primordialmachine".
+clone_depth: 1
+
+# Build worker image (VM template).
+image: Visual Studio 2022
+
+# Build on pushes to "master" and "develop" branches.
+branches:
+  only:
+    - master
+    - develop
+
+# Do not build on tag pushes.
+skip_tags: true
+
+# Build platform "x64" and "Win32".
+platform:
+    - x64
+    - Win32
+
+# Build configuration "Release".
+configuration:
+    - Release
+    - Debug
+    - MinSizeRel
+    - RelWithDebInfo
+
+install:
+    # Download and install CMake.
+    - set CMAKE_URL="https://cmake.org/files/v3.26/cmake-3.26.4-windows-x86_64.zip"
+    - appveyor DownloadFile %CMAKE_URL% -FileName cmake.zip
+    - 7z x cmake.zip -oC:\projects\deps > nul
+    - move C:\projects\deps\cmake-* C:\projects\deps\cmake # Move to a version-agnostic directory
+    - set PATH=C:\projects\deps\cmake\bin;%PATH%
+    - cmake --version
+
+# Generate solution and project files.
+before_build:
+    - ps: |
+        ${env:SUFFIX}=""
+        ${env:ARCHITECTURE}=''
+        if (${env:PLATFORM} -eq 'Win32') {
+          ${env:SUFFIX}='x86'
+          ${env:ARCHITECTURE}='x86'
+        } elseif(${env:PLATFORM} -eq 'x64') {
+          ${env:SUFFIX}='x64'
+          ${env:ARCHITECTURE}='x64'
+        } else {
+          throw "unsupported platform ${env:PLATFORM}";
+        }
+        ${env:SUFFIX}="${env:SUFFIX}-$(${env:Configuration}.ToLower())"
+        ${env:RELEASE_NAME}="primordialmachine-dependencies-latest-${env:SUFFIX}"
+        ${env:ARCHIVE_FILENAME}="${env:RELEASE_NAME}.zip"
+build_script:
+    - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; dir | Write-Host
+    - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; ./build.ps1 -Architecture ${env:ARCHITECTURE} -Configuration ${env:CONFIGURATION}
+
+after_build:
+    - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; dir | Write-Host
+    - ps: |
+        7z a -tzip ${env:ARCHIVE_FILENAME} `
+            ${env:APPVEYOR_BUILD_FOLDER}/freetype-${env:SUFFIX}.zip `
+            ${env:APPVEYOR_BUILD_FOLDER}/libpng-${env:SUFFIX}.zip `
+            ${env:APPVEYOR_BUILD_FOLDER}/zlib-${env:SUFFIX}.zip
+
+# If one matrix entry fails, all entries fails (https://www.appveyor.com/docs/build-configuration#failing-strategy).
+matrix:
+    fast_finish: true
+
+artifacts:
+    - path: $(ARCHIVE_FILENAME)
+      name: $(ARCHIVE_FILENAME)
+
+deploy:
+    release: $(RELEASE_NAME)
+    description: 'Primordial Machine Nightly'
+    provider: GitHub
+    auth_token:
+        secure: NPrtXEjMD8sb39W2ObCrJDNA3ejA/vqHurZKUjnBBnLkaDjgZn9ERjg69rhcfF7R # encrypted token from GitHub
+        artifact: $(ARCHIVE_FILENAME)                                            # upload the artifact
+    draft: false
+    prerelease: false
+    force_update: true
+    on:
+        branch: master                 # release from master branch only
