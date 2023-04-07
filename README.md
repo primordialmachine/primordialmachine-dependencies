@@ -4,8 +4,7 @@
 Primordial Machine's External Dependencies is a project that
 - logically separates external dependencies from the source codes of
   [Primordial Machine](https://bitbucket.org/primordialmachine/primordialmachine/).
-- protects the Primordial Machine's developers from idiosyncracies of particualr
-  dependencies
+- protects the Primordial Machine's developers from idiosyncracies of dependencies
 - allows for centralized and uniform method of maintaining these dependencies.
 
 ## Building using CMake
