@@ -37,18 +37,16 @@ install:
 # Generate solution and project files.
 before_build:
     - ps: |
-        ${env:RELEASE_NAME}="primordialmachine-dependencies-latest-$(${env:Configuration}.ToLower())"
-        ${env:SUFFIX}="$(${env:Configuration}.ToLower())"
-        
+        ${env:SUFFIX}=""
         if (${env:PLATFORM} -eq 'Win32') {
-          ${env:SUFFIX}="${env:SUFFIX}-x86"
-          ${env:RELEASE_NAME}="${env:RELEASE_NAME}-x86"
+          ${env:SUFFIX}="x86"
         } elseif(${env:PLATFORM} -eq 'x64') {
-          ${env:SUFFIX}="${env:SUFFIX}-x64"
-          ${env:RELEASE_NAME}="${env:RELEASE_NAME}-x64"
+          ${env:SUFFIX}="x64"
         } else {
           throw "unsupported platform ${env:PLATFORM}";
         }
+        ${env:SUFFIX}="${env:SUFFIX}-$(${env:Configuration}.ToLower())"
+        ${env:RELEASE_NAME}="primordialmachine-dependencies-latest-${env:SUFFIX}"
         ${env:ARCHIVE_FILENAME}="${env:RELEASE_NAME}.zip"
 build_script:
     - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; ./build.ps1
