@@ -4,32 +4,39 @@ cd .\source-zlib
 git clone https://github.com/madler/zlib.git .
 cd ..
 
-#
-New-Item -ItemType Directory -Force -Path .\build-zlib-x86
-cd .\build-zlib-x86
-cmake -A Win32 -S .\..\source-zlib .
-cmake --build . --config Release
-cd ..
+function build {
+  param(
+    [Parameter()] [string] $Architecture,
+    [Parameter()] [string] $CMakeArchitecture,
+    [Parameter()] [string] $Configuration
+  )
+  $suffix = "zlib-$Architecture-$($Configuration.ToLower())"
+  New-Item -ItemType Directory -Force -Path .\build-$suffix
+  cd .\build-$suffix
+  cmake -A $CMakeArchitecture -S .\..\source-zlib .
+  cmake --build . --config $Configuration
+  cd ..
 
-New-Item -ItemType Directory -Force -Path .\package-zlib-x86\zlib\lib
-Copy-Item .\build-zlib-x86\Release\zlibstatic.lib .\package-zlib-x86\zlib\lib\zlibstatic.lib
-New-Item -ItemType Directory -Force -Path .\package-zlib-x86\zlib\include
-Copy-Item .\source-zlib\zlib.h .\package-zlib-x86\zlib\include\zlib.h
-Copy-Item .\build-zlib-x86\zconf.h .\package-zlib-x86\zlib\include\zconf.h
+  New-Item -ItemType Directory -Force -Path .\package-$suffix\zlib\lib
+  if ($Configuration -eq 'Debug') {
+    Copy-Item .\build-$suffix\$Configuration\zlibstaticd.lib .\package-$suffix\zlib\lib\zlib.lib
+  } else {
+    Copy-Item .\build-$suffix\$Configuration\zlibstatic.lib .\package-$suffix\zlib\lib\zlib.lib
+  }
+  New-Item -ItemType Directory -Force -Path .\package-$suffix\zlib\include
+  Copy-Item .\source-zlib\zlib.h .\package-$suffix\zlib\include\zlib.h
+  Copy-Item .\build-$suffix\zconf.h .\package-$suffix\zlib\include\zconf.h
 
-Compress-Archive -Force -Path .\package-zlib-x86\* -DestinationPath .\zlib-x86.zip
+  Compress-Archive -Force -Path .\package-$suffix\* -DestinationPath .\$suffix.zip
+}
 
-#
-New-Item -ItemType Directory -Force -Path .\build-zlib-x64
-cd .\build-zlib-x64
-cmake -A x64 -S .\..\source-zlib .
-cmake --build . --config Release
-cd ..
+build -Architecture 'x86' -CMakeArchitecture 'Win32' -Configuration 'RelWithDebInfo'
+build -Architecture 'x86' -CMakeArchitecture 'Win32' -Configuration 'MinSizeRel'
+build -Architecture 'x86' -CMakeArchitecture 'Win32' -Configuration 'Debug'
+build -Architecture 'x86' -CMakeArchitecture 'Win32' -Configuration 'Release'
 
-New-Item -ItemType Directory -Force -Path .\package-zlib-x64\zlib\lib
-Copy-Item .\build-zlib-x64\Release\zlibstatic.lib .\package-zlib-x64\zlib\lib\zlibstatic.lib
-New-Item -ItemType Directory -Force -Path .\package-zlib-x64\zlib\include
-Copy-Item .\source-zlib\zlib.h .\package-zlib-x64\zlib\include\zlib.h
-Copy-Item .\build-zlib-x64\zconf.h .\package-zlib-x64\zlib\include\zconf.h
+build -Architecture 'x64' -CMakeArchitecture 'x64' -Configuration 'RelWithDebInfo'
+build -Architecture 'x64' -CMakeArchitecture 'x64' -Configuration 'MinSizeRel'
+build -Architecture 'x64' -CMakeArchitecture 'x64' -Configuration 'Debug'
+build -Architecture 'x64' -CMakeArchitecture 'x64' -Configuration 'Release'
 
-Compress-Archive -Force -Path .\package-zlib-x64\* -DestinationPath .\zlib-x64.zip

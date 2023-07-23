@@ -21,7 +21,9 @@ platform:
 # Build configuration "Release".
 configuration:
     - Release
-    #- Debug
+    - Debug
+    - MinSizeRel
+    - RelWithDebInfo
 
 install:
     # Download and install CMake.
@@ -35,17 +37,20 @@ install:
 # Generate solution and project files.
 before_build:
     - ps: |
-        ${env:RELEASE_NAME}="primordialmachine-dependencies-latest-$(${env:PLATFORM}.ToLower())"
-        ${env:ARCHIVE_FILENAME}="${env:RELEASE_NAME}.zip"
+        ${env:RELEASE_NAME}="primordialmachine-dependencies-latest"
         ${env:SUFFIX}="";
         if (${env:PLATFORM} -eq 'Win32') {
           ${env:SUFFIX}="x86"
+          ${env:RELEASE_NAME}="${env:RELEASE_NAME}-x86"
         } elseif(${env:PLATFORM} -eq 'x64') {
           ${env:SUFFIX}="x64"
+          ${env:RELEASE_NAME}="${env:RELEASE_NAME}-x64"
         } else {
           throw "unsupported platform ${env:PLATFORM}";
         }
-
+        ${env:RELEASE_NAME}="${env:RELEASE_NAME}-$(${env:Configuration}.ToLower())"
+        ${env:SUFFIX}="${env:SUFFIX}-$(${env:Configuration}.ToLower())"
+        ${env:ARCHIVE_FILENAME}="${env:RELEASE_NAME}.zip"
 build_script:
     - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; ./build.ps1
 

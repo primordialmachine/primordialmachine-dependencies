@@ -4,25 +4,19 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
 source-zlib
-build-zlib-x64
-build-zlib-x86
-package-zlib-x64
-package-zlib-x86
-zlib-x64.zip
-zlib-x86.zip
+build-zlib-*
+package-zlib-*
+zlib-x64*.zip
+zlib-x86*.zip
 
 source-libpng
-build-libpng-x64
-build-libpng-x86
-package-libpng-x64
-package-libpng-x86
-libpng-x64.zip
-libpng-x86.zip
+build-libpng-*
+package-libpng-*
+libpng-x64*.zip
+libpng-x86*.zip
 
 source-freetype
-build-freetype-x64
-build-freetype-x86
-package-freetype-x64
-package-freetype-x86
-freetype-x64.zip
-freetype-x86.zip
+build-freetype-*
+package-freetype-*
+freetype-x64*.zip
+freetype-x86*.zip
