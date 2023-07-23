@@ -15,7 +15,7 @@ The project requires Git and CMake to build to be in your path as well as
 the reachability of the following Git repositories:
 - [freetype](https://gitlab.freedesktop.org/freetype/freetype.git)
 - [libpng](https://github.com/glennrp/libpng.git)
-- [zlib] (https://github.com/madler/zlib.git)
+- [zlib](https://github.com/madler/zlib.git)
 
 The following steps perform an in-source build (out of source builds are not yet supported).
 
