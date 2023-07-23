@@ -3,29 +3,33 @@
 ## What is Primordial Machine's External Dependencies Project
 Primordial Machine's External Dependencies is a project that
 - logically separates external dependencies from the source codes of
-  [Primordial Machine](https://bitbucket.org/primordialmachine/primordialmachine/).
+  [Primordial Machine](https://github.com/primordialmachine/primordialmachine/).
 - protects the Primordial Machine's developers from idiosyncracies of dependencies
 - allows for centralized and uniform method of maintaining these dependencies.
+
+## Requirements
+This project requires GIT and KitWare's CMake to build.
 
 ## Building using CMake
 The project requires Git and CMake to build to be in your path as well as
 the reachability of the following Git repositories:
-- [FreeType](https://gitlab.freedesktop.org/freetype/freetype.git)
+- [freetype](https://gitlab.freedesktop.org/freetype/freetype.git)
 - [libpng](https://github.com/glennrp/libpng.git)
+- [zlib] (https://github.com/madler/zlib.git)
 
-The following steps perform an out-of-source build of this project.
+The following steps perform an in-source build (out of source builds are not yet supported).
 
 - Clone this repository into a directory called `primordialmachine-dependencies`.
   If you did everything correctly, then you should find this README file in
   `primordialmachine-dependencies\README.md`.
 
 - Open a console and enter the directory `primordialmachine-dependencies`.
-  Enter `cd ..` to enter the parent directory.
-  We assume in the parent directory no folder `primordialmachine-dependencies-build` exists.
-  Enter `mkdir primordialmachine-dependencies-build` to create an empty build directory and `cd primordialmachine-dependencies-build` to enter it.
-  
-- Enter `cmake .\..\primordialmachine-dependencies` to build this project.
-
-The command `cmake .\..\primordialmachine-dependencies` generates build files for the default target platform architecture.
-You can explicitly specify the target platform architecture `x64` and the `Win32` by using the
-`cmake -A x64 \..\primordialmachine-dependencies` and - `cmake -A Win32 \..\primordialmachine-dependencies`, respectively.
+  Enter `./build.ps1`. If the build succeeds, you should find the zip files
+  - `zlib-x86.zip`,
+  - `zlib-x64.zip`,
+  - `libpng-x86.zip`,
+  - `libpng-x64.zip`,
+  - `freetype-x86.zip`,
+  - `freetype-x64.zip`,
+  in this directory.
+  Enter `./clean.ps1` to remove the intermediate files.
