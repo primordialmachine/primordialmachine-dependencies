@@ -37,8 +37,9 @@ install:
 # Generate solution and project files.
 before_build:
     - ps: |
-        ${env:RELEASE_NAME}="primordialmachine-dependencies-latest"
-        ${env:SUFFIX}="";
+        ${env:RELEASE_NAME}="primordialmachine-dependencies-latest-$(${env:Configuration}.ToLower())"
+        ${env:SUFFIX}="$(${env:Configuration}.ToLower())"
+        
         if (${env:PLATFORM} -eq 'Win32') {
           ${env:SUFFIX}="x86"
           ${env:RELEASE_NAME}="${env:RELEASE_NAME}-x86"
@@ -48,16 +49,14 @@ before_build:
         } else {
           throw "unsupported platform ${env:PLATFORM}";
         }
-        ${env:RELEASE_NAME}="${env:RELEASE_NAME}-$(${env:Configuration}.ToLower())"
-        ${env:SUFFIX}="${env:SUFFIX}-$(${env:Configuration}.ToLower())"
         ${env:ARCHIVE_FILENAME}="${env:RELEASE_NAME}.zip"
 build_script:
     - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; ./build.ps1
 
 after_build:
-    - ps: 7z a ${env:ARCHIVE_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\freetype-$(${env:SUFFIX}).zip
-    - ps: 7z a ${env:ARCHIVE_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\libpng-$(${env:SUFFIX}).zip
-    - ps: 7z a ${env:ARCHIVE_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\zlib-$(${env:SUFFIX}).zip
+    - ps: 7z a ${env:ARCHIVE_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\freetype-${env:SUFFIX}.zip
+    - ps: 7z a ${env:ARCHIVE_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\libpng-${env:SUFFIX}.zip
+    - ps: 7z a ${env:ARCHIVE_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\zlib-${env:SUFFIX}.zip
                                           
 # If one matrix entry fails, all entries fails (https://www.appveyor.com/docs/build-configuration#failing-strategy).
 matrix:
