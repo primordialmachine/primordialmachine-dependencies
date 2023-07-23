@@ -30,3 +30,6 @@ The following steps perform an in-source build (out of source builds are not yet
   - `freetype-x64.zip`,
   in this directory.
   Enter `./clean.ps1` to remove the intermediate files.
+
+## CI/CD
+[![master branch build status](https://ci.appveyor.com/api/projects/status/7copraus0a07l1el/branch/master?svg=true)](https://ci.appveyor.com/project/primordialmachine/primordialmachine-dependencies/branch/master)
