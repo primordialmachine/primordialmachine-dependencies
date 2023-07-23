@@ -45,7 +45,7 @@ before_build:
         }
     - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; ./build.ps1
 
-build:
+build_script:
     #parallel: true       # enable MSBuild parallel builds
     #project: dailies.sln # path to Visual Studio solution or project
 
