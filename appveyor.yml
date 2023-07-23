@@ -1,0 +1,80 @@
+# AppVeyor configuration for AppVeyor project "primordialmachine".
+clone_depth: 1
+
+# Build worker image (VM template).
+image: Visual Studio 2022
+
+# Build on pushes to "master" and "develop" branches.
+branches:
+  only:
+    - master
+    - develop
+
+# Do not build on tag pushes.
+skip_tags: true
+
+# Build platform "x64" and "Win32".
+platform:
+    - x64
+    - Win32
+
+# Build configuration "Release".
+configuration:
+    - Release
+    #- Debug
+
+install:
+    # Download and install CMake.
+    - set CMAKE_URL="https://cmake.org/files/v3.24/cmake-3.24.3-windows-x86_64.zip"
+    - appveyor DownloadFile %CMAKE_URL% -FileName cmake.zip
+    - 7z x cmake.zip -oC:\projects\deps > nul
+    - move C:\projects\deps\cmake-* C:\projects\deps\cmake # Move to a version-agnostic directory
+    - set PATH=C:\projects\deps\cmake\bin;%PATH%
+    - cmake --version
+
+# Generate solution and project files.
+before_build:
+    - ps: |
+        ${env:SUFFIX}="";
+        if (${env:PLATFORM} -eq 'Win32') {
+          ${env:SUFFIX}="x86"
+        } elseif(${env:PLATFORM} -eq 'x64') {
+          ${env:SUFFIX}="x64"
+        } else {
+          throw "unsupported platform ${env:PLATFORM}";
+        }
+    - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; ./build.ps1
+
+build:
+    #parallel: true       # enable MSBuild parallel builds
+    #project: dailies.sln # path to Visual Studio solution or project
+
+after_build:
+    #- ps: 7z a ${env:ZIP_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\day17\$(${env:CONFIGURATION}.ToLower())\dailies.day17.exe
+    #- ps: 7z a ${env:ZIP_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\day17\$(${env:CONFIGURATION}.ToLower())\ft2-plugin.dll
+    #- ps: 7z a ${env:ZIP_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\day17\$(${env:CONFIGURATION}.ToLower())\wic-plugin.dll
+                                          
+# If one matrix entry fails, all entries fails (https://www.appveyor.com/docs/build-configuration#failing-strategy).
+matrix:
+    fast_finish: true
+
+artifacts:
+    - path: ${env:APPVEYOR_BUILD_FOLDER}/freetype-$(SUFFIX).zip
+      name: freetype-$(SUFFIX).zip
+    - path: ${env:APPVEYOR_BUILD_FOLDER}/libpng-$(SUFFIX).zip
+      name: libpng-$(SUFFIX).zip
+    - path: ${env:APPVEYOR_BUILD_FOLDER}/zlib-$(SUFFIX).zip
+      name: zlib-$(SUFFIX).zip
+
+deploy:
+    release: $(RELEASE_NAME)
+    description: 'Primordial Machine Nightly'
+    provider: GitHub
+    auth_token:
+        secure: NPrtXEjMD8sb39W2ObCrJDNA3ejA/vqHurZKUjnBBnLkaDjgZn9ERjg69rhcfF7R # encrypted token from GitHub
+        artifact: $(ZIP_FILENAME)                                                # upload the artifact
+    draft: false
+    prerelease: false
+    force_update: true
+    on:
+        branch: master                 # release from master branch only
