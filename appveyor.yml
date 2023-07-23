@@ -41,10 +41,10 @@ before_build:
         ${env:SUFFIX}="$(${env:Configuration}.ToLower())"
         
         if (${env:PLATFORM} -eq 'Win32') {
-          ${env:SUFFIX}="x86"
+          ${env:SUFFIX}="${env:SUFFIX}-x86"
           ${env:RELEASE_NAME}="${env:RELEASE_NAME}-x86"
         } elseif(${env:PLATFORM} -eq 'x64') {
-          ${env:SUFFIX}="x64"
+          ${env:SUFFIX}="${env:SUFFIX}-x64"
           ${env:RELEASE_NAME}="${env:RELEASE_NAME}-x64"
         } else {
           throw "unsupported platform ${env:PLATFORM}";
