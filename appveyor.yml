@@ -45,11 +45,9 @@ before_build:
         } else {
           throw "unsupported platform ${env:PLATFORM}";
         }
-    - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; ./build.ps1
 
 build_script:
-    #parallel: true       # enable MSBuild parallel builds
-    #project: dailies.sln # path to Visual Studio solution or project
+    - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; ./build.ps1
 
 after_build:
     - ps: 7z a ${env:ARCHIVE_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\freetype-$(${env:SUFFIX}).zip
