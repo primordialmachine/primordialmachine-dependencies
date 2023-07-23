@@ -34,4 +34,4 @@ Copy-Item .\source-libpng\png.h .\package-libpng-x64\libpng\include\png.h
 Copy-Item .\source-libpng\pngconf.h .\package-libpng-x64\libpng\include\pngconf.h
 Copy-Item .\build-libpng-x64\pnglibconf.h .\package-libpng-x64\libpng\include\pnglibconf.h
 
-Compress-Archive -Force -Path .\package-libpng-x64\* -DestinationPath .\libng-x64.zip
+Compress-Archive -Force -Path .\package-libpng-x64\* -DestinationPath .\libpng-x64.zip
