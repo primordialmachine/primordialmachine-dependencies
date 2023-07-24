@@ -52,10 +52,11 @@ before_build:
         ${env:RELEASE_NAME}="primordialmachine-dependencies-latest-${env:SUFFIX}"
         ${env:ARCHIVE_FILENAME}="${env:RELEASE_NAME}.zip"
 build_script:
+    - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; dir | Write-Host
     - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; ./build.ps1 -Architecture ${env:ARCHITECTURE} -Configuration ${env:CONFIGURATION}
 
 after_build:
-    - ps: Write-Host dir ${env:APPVEYOR_BUILD_FOLDER}
+    - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; dir | Write-Host
     - ps: |
         7z a -tzip ${env:ARCHIVE_FILENAME} `
             ${env:APPVEYOR_BUILD_FOLDER}/freetype-${env:SUFFIX}.zip `
