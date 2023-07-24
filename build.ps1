@@ -1,3 +1,8 @@
-./build-zlib.ps1
-./build-libpng.ps1
-./build-freetype.ps1
+param(
+  [Parameter()] [string] $Architecture,
+  [Parameter()] [string] $Configuration
+)
+
+./build-zlib.ps1 -Architecture $Architecture -Configuration $Configuration
+./build-libpng.ps1 -Architecture $Architecture -Configuration $Configuration
+./build-freetype.ps1 -Architecture $Architecture -Configuration $Configuration

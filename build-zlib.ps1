@@ -1,3 +1,8 @@
+param(
+  [Parameter()] [string] $Architecture,
+  [Parameter()] [string] $Configuration
+)
+
 #
 New-Item -ItemType Directory -Force -Path .\source-zlib
 cd .\source-zlib
@@ -38,13 +43,4 @@ function build {
   Compress-Archive -Force -Path .\package-$suffix\* -DestinationPath .\$suffix.zip
 }
 
-build -Architecture 'x86' -Configuration 'RelWithDebInfo'
-build -Architecture 'x86' -Configuration 'MinSizeRel'
-build -Architecture 'x86' -Configuration 'Debug'
-build -Architecture 'x86' -Configuration 'Release'
-
-build -Architecture 'x64' -Configuration 'RelWithDebInfo'
-build -Architecture 'x64' -Configuration 'MinSizeRel'
-build -Architecture 'x64' -Configuration 'Debug'
-build -Architecture 'x64' -Configuration 'Release'
-
+build -Architecture $Architecture -Configuration $Configuration

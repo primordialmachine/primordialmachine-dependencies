@@ -1,3 +1,8 @@
+param(
+  [Parameter()] [string] $Architecture,
+  [Parameter()] [string] $Configuration
+)
+
 #
 New-Item -ItemType Directory -Force -Path .\source-freetype
 cd .\source-freetype
@@ -43,12 +48,4 @@ function build {
   Compress-Archive -Force -Path .\package-freetype-$suffix\* -DestinationPath .\freetype-$suffix.zip
 }
 
-build -Architecture 'x86' -Configuration 'RelWithDebInfo'
-build -Architecture 'x86' -Configuration 'MinSizeRel'
-build -Architecture 'x86' -Configuration 'Debug'
-build -Architecture 'x86' -Configuration 'Release'
-
-build -Architecture 'x64' -Configuration 'RelWithDebInfo'
-build -Architecture 'x64' -Configuration 'MinSizeRel'
-build -Architecture 'x64' -Configuration 'Debug'
-build -Architecture 'x64' -Configuration 'Release'
+build -Architecture $Architecture -Configuration $Configuration
