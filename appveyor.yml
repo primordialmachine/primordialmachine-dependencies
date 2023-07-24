@@ -41,10 +41,10 @@ before_build:
         ${env:ARCHITECTURE}=''
         if (${env:PLATFORM} -eq 'Win32') {
           ${env:SUFFIX}='x86'
-          ${env:MY_ARCHITECTURE='x86'
+          ${env:ARCHITECTURE}='x86'
         } elseif(${env:PLATFORM} -eq 'x64') {
           ${env:SUFFIX}='x64'
-          ${env:MY_ARCHITECTURE}='x64'
+          ${env:ARCHITECTURE}='x64'
         } else {
           throw "unsupported platform ${env:PLATFORM}";
         }
