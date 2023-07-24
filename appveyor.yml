@@ -15,7 +15,7 @@ skip_tags: true
 
 # Build platform "x64" and "Win32".
 platform:
-    - x64
+    #- x64
     - Win32
 
 # Build configuration "Release".
