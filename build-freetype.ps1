@@ -19,9 +19,9 @@ function build {
   cd .\build-freetype-$suffix
   $cmake_args=''
   if ($Architecture -eq 'x86') {
-    $cmake_args=' -A Win32'
+    $cmake_args='-A Win32'
   } elseif ($Architecture -eq 'x64') {
-    $cmake_args=' -A x64'
+    $cmake_args='-A x64'
   }
   cmake $cmake_args `
         -DPNG_PNG_INCLUDE_DIR=".\..\package-libpng-$suffix\libpng\include" `
@@ -30,7 +30,7 @@ function build {
         -DZLIB_LIBRARY=".\..\package-zlib-$suffix\zlib\lib\zlib.lib" `
         -DBUILD_SHARED_LIBS=false `
         ".\..\source-freetype"
-  cmake --build . 
+  cmake --build . --config $Configuration
   cmake --build . --config $Configuration --target package
   cd ..
 
