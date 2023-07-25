@@ -6,3 +6,4 @@ param(
 ./build-zlib.ps1 -Architecture $Architecture -Configuration $Configuration
 ./build-libpng.ps1 -Architecture $Architecture -Configuration $Configuration
 ./build-freetype.ps1 -Architecture $Architecture -Configuration $Configuration
+./build-openal-soft.ps1 -Architecture $Architecture -Configuration $Configuration

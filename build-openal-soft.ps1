@@ -6,9 +6,9 @@ param(
 . .\common.ps1
 
 #
-New-Item -ItemType Directory -Force -Path .\source-libpng
-cd .\source-libpng
-git clone https://github.com/glennrp/libpng.git .
+New-Item -ItemType Directory -Force -Path .\source-openal-soft
+cd .\source-openal-soft
+git clone https://github.com/kcat/openal-soft .
 cd ..
 
 function build {
@@ -22,9 +22,8 @@ function build {
   } else {
     throw 'unsupported architecture'
   }
-  $name='libpng'
+  $name='openal-soft'
   $suffix="$name-$Architecture-$($Configuration.ToLower())"
-  $source_dir="source-$name"
   $build_dir="build-$suffix"
   $package_dir="package-$suffix"
   $archive="$suffix.zip"
@@ -38,28 +37,28 @@ function build {
   } elseif ($Architecture -eq 'x64') {
     $cmake_args+=@('-A', 'x64')
   }
-  $cmake_args+=@("-DZLIB_INCLUDE_DIRS=`".\..\package-zlib-$Architecture-$($Configuration.ToLower())\zlib\include`"", `
-                 '-DPNG_BUILD_ZLIB=ON', `
-                 '-DPNG_SHARED=OFF', `
-                 '-DPNG_TESTS=OFF')
-  $cmake_args+=@("./../$source_dir")
+  $cmake_args+=@("-DLIBTYPE=`"STATIC`"");
+  $cmake_args+=@(".\..\source-$name");
   & cmake $cmake_args
   & cmake @('--build', '.', '--config', $Configuration)
 
+  & cmake $cmake_args
+  & cmake @('--install', '.', '--prefix', './install', '--config', $Configuration)
+
   cd ..
 
-  New-Item -ItemType Directory -Force -Path .\$package_dir\libpng\lib
+  New-Item -ItemType Directory -Force -Path .\$package_dir\openal-soft\lib
   if ($Configuration -eq 'Debug') {
-    Copy-Item .\$build_dir\$Configuration\libpng16_staticd.lib .\$package_dir\libpng\lib\libpng.lib
+    Copy-Item .\$build_dir\install\lib\OpenAL32.lib .\$package_dir\openal-soft\lib\OpenAL32.lib
   } elseif (($Configuration -eq 'Release') -or (($Configuration -eq 'MinSizeRel') -or ($Configuration -eq 'RelWithDebInfo'))) {
-    Copy-Item .\$build_dir\$Configuration\libpng16_static.lib .\$package_dir\libpng\lib\libpng.lib
+    Copy-Item .\$build_dir\install\lib\OpenAL32.lib .\$package_dir\openal-soft\lib\OpenAL32.lib
   } else {
     throw 'unsupported architecture'
   }
-  New-Item -ItemType Directory -Force -Path .\$package_dir\libpng\include
-  Copy-Item .\$source_dir\png.h .\$package_dir\libpng\include\png.h
-  Copy-Item .\$source_dir\pngconf.h .\$package_dir\libpng\include\pngconf.h
-  Copy-Item .\$build_dir\pnglibconf.h .\$package_dir\libpng\include\pnglibconf.h
+  New-Item -ItemType Directory -Force -Path .\$package_dir\openal-soft\include\AL
+  Copy-Item .\$build_dir\install\include\AL\al.h .\$package_dir\openal-soft\include\AL\al.h
+  Copy-Item .\$build_dir\install\include\AL\alc.h .\$package_dir\openal-soft\include\AL\alc.h
+  Copy-Item .\$build_dir\install\include\AL\alext.h .\$package_dir\openal-soft\include\AL\alext.h
 
   Compress-Archive -Force -Path .\$package_dir\* -DestinationPath .\$archive
 }

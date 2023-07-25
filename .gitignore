@@ -20,3 +20,9 @@ build-freetype-*
 package-freetype-*
 freetype-x64*.zip
 freetype-x86*.zip
+
+source-openal-soft
+build-openal-soft-*
+package-openal-soft-*
+openal-soft-x64*.zip
+openal-soft-x86*.zip
