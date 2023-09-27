@@ -73,8 +73,9 @@ artifacts:
       name: $(ARCHIVE_FILENAME)
 
 deploy:
-    release: $(RELEASE_NAME)
-    description: 'Primordial Machine Nightly'
+    release: primordialmachine-dependencies-v$(APPVEYOR_BUILD_VERSION)
+    tag: primordialmachine-dependencies-v$(APPVEYOR_BUILD_VERSION)
+    description: 'Primordial Machine Dependencies v$(APPVEYOR_BUILD_VERSION)'
     provider: GitHub
     auth_token:
         secure: NPrtXEjMD8sb39W2ObCrJDNA3ejA/vqHurZKUjnBBnLkaDjgZn9ERjg69rhcfF7R # encrypted token from GitHub
