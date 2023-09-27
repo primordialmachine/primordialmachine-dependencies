@@ -16,6 +16,7 @@ the reachability of the following Git repositories:
 - [freetype](https://gitlab.freedesktop.org/freetype/freetype.git)
 - [libpng](https://github.com/glennrp/libpng.git)
 - [zlib](https://github.com/madler/zlib.git)
+- [openal-soft](https://github.com/kcat/openal-soft)
 
 The following steps perform an in-source build (out of source builds are not yet supported).
 
@@ -28,6 +29,8 @@ The following steps perform an in-source build (out of source builds are not yet
   - `libpng-x64.zip`,
   - `freetype-x86.zip`,
   - `freetype-x64.zip`,
+  - `openal-soft-x86.zip`,
+  - `openal-soft-x64.zip`,
   in this directory.
   Enter `./clean.ps1` to remove the intermediate files.
 

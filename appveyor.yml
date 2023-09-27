@@ -59,6 +59,7 @@ after_build:
     - ps: cd ${env:APPVEYOR_BUILD_FOLDER}; dir | Write-Host
     - ps: |
         7z a -tzip ${env:ARCHIVE_FILENAME} `
+            ${env:APPVEYOR_BUILD_FOLDER}/openal-soft-${env:SUFFIX}.zip `
             ${env:APPVEYOR_BUILD_FOLDER}/freetype-${env:SUFFIX}.zip `
             ${env:APPVEYOR_BUILD_FOLDER}/libpng-${env:SUFFIX}.zip `
             ${env:APPVEYOR_BUILD_FOLDER}/zlib-${env:SUFFIX}.zip
