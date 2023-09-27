@@ -29,6 +29,8 @@ function build {
   $package_dir="package-$suffix"
   $archive="$suffix.zip"
   
+  $version="2.13.2"
+  
   Write-Host "building $name with arch = $Architecture and config = $($Configuration.ToLower())"
   New-Item -ItemType Directory -Force -Path .\$build_dir
   cd .\$build_dir
@@ -52,11 +54,11 @@ function build {
   delete -Path ".\$package_dir"
   New-Item -ItemType Directory -Force -Path .\$package_dir
   if ($Architecture -eq 'x86') {
-    Expand-Archive -LiteralPath .\$build_dir\freetype-2.13.1-win32.zip .\$package_dir
-    mv .\$package_dir\freetype-2.13.1-win32 .\$package_dir\freetype
+    Expand-Archive -LiteralPath .\$build_dir\freetype-$version-win32.zip .\$package_dir
+    mv .\$package_dir\freetype-$version-win32 .\$package_dir\freetype
   } elseif ($Architecture -eq 'x64') {
-    Expand-Archive -LiteralPath .\$build_dir\freetype-2.13.1-win64.zip .\$package_dir
-    mv .\$package_dir\freetype-2.13.1-win64 .\$package_dir\freetype
+    Expand-Archive -LiteralPath .\$build_dir\freetype-$version-win64.zip .\$package_dir
+    mv .\$package_dir\freetype-$version-win64 .\$package_dir\freetype
   }
   mv .\$package_dir\freetype\include\freetype2\* .\$package_dir\freetype\include
   delete -Path ".\$package_dir\freetype\include\freetype2"
