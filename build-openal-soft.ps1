@@ -59,6 +59,7 @@ function build {
   Copy-Item .\$build_dir\install\include\AL\al.h .\$package_dir\openal-soft\include\AL\al.h
   Copy-Item .\$build_dir\install\include\AL\alc.h .\$package_dir\openal-soft\include\AL\alc.h
   Copy-Item .\$build_dir\install\include\AL\alext.h .\$package_dir\openal-soft\include\AL\alext.h
+  Copy-Item .\$build_dir\install\include\AL\efx.h .\$package_dir\openal-soft\include\AL\efx.h
 
   Compress-Archive -Force -Path .\$package_dir\* -DestinationPath .\$archive
 }
