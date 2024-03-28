@@ -38,10 +38,10 @@ function build {
   } elseif ($Architecture -eq 'x64') {
     $cmake_args+=@('-A', 'x64')
   }
-  $cmake_args+=@("-DZLIB_INCLUDE_DIRS=`".\..\package-zlib-$Architecture-$($Configuration.ToLower())\zlib\include`"", `
-                 '-DPNG_BUILD_ZLIB=ON', `
+  $cmake_args+=@("-DZLIB_ROOT=`".\..\package-zlib-$Architecture-$($Configuration.ToLower())\zlib`"", `
                  '-DPNG_SHARED=OFF', `
-                 '-DPNG_TESTS=OFF')
+                 '-DPNG_TESTS=OFF', `
+                 '-DCMAKE_POLICY_POLICY_DEFAULT_CMP0074=NEW')
   $cmake_args+=@("./../$source_dir")
   & cmake $cmake_args
   & cmake @('--build', '.', '--config', $Configuration)
